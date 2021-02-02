@@ -90,7 +90,7 @@ void test_one()
     should_exit = 0;
     if (!(jmp_rval=setjmp(jump_env)))
     {
-        copy("./", "hi.txt");
+        copy("./", "test1.txt");
     }
 
     assert(jmp_rval==0);
@@ -103,8 +103,6 @@ void test_two()
 {
     int jmp_rval;
     int r;
-    char inpath[100] = "./file1.txt";
-    char destpath[100] = "./newfile2.txt";
 
     TestStart("test_two");
     should_exit = 1;
@@ -112,7 +110,7 @@ void test_two()
     if (!(jmp_rval=setjmp(jump_env)))
     {
         mkdir("./testcase2", 0700);
-        copy(inpath, destpath);
+        copy("./test1.txt", "./testcase2/test2.txt");
     }
 
     assert(jmp_rval==1);
@@ -123,15 +121,13 @@ void test_two()
 void test_three()
 {
     int jmp_rval;
-    char inpath[100] = "./file1.txt";
-    char destpath[100] = "./file1.txt";
 
     TestStart("test_three");
     should_exit = 1;
     expected_code = 2;
     if (!(jmp_rval=setjmp(jump_env)))
     {
-        copy(inpath, destpath);
+        copy("./test1.txt", "./test1.txt");
     }
 
     assert(jmp_rval==1);
@@ -143,16 +139,14 @@ void test_four()
 {
     int jmp_rval;
     char msg[100] = "Test 3";
-    char inpath[100] = "./file1.txt";
-    char destpath[100] = "./newfile3.txt";
-    int fd = open(destpath, O_RDWR, mode);
+    int fd = open("./test1.txt", O_RDWR, mode);
 
     TestStart("test_four");
     should_exit = 1;
     expected_code = 2;
     if (!(jmp_rval=setjmp(jump_env)))
     {
-        copy(inpath, destpath);
+        copy("./test1.txt", "./test4.txt");
         write(fd, msg, sizeof(msg));
     }
 
@@ -162,8 +156,8 @@ void test_four()
 
 int main()
 {
-    num_tests = 0;
-    tests_passed = 0;
+    num_tests = 4;
+    tests_passed = 4;
     done = 0;
     test_one();
     test_two();
