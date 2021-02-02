@@ -3,5 +3,6 @@
 
 # How to use:
 
-- 1. Compile and run
+- 1. Compile and run hw4test.c
 - 2. Follow instructions
+- 3. Compile and run hw4testcases.c to test
