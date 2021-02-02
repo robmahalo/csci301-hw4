@@ -5,6 +5,33 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
+/* Copy source file to destination */
+
+int copy(char * source, char * dest)
+{
+	int fd_input, fd_output, rval;
+	off_t n_bytes = 0;
+	struct stat s_stat = {0};
+	
+	if ((fd_input = open(source, O_RDONLY)) == -1)
+	{
+		return -1;
+	}
+	if ((fd_output = creat(dest, 0660)) == -1)
+	{
+		close(fd_input);
+		return -1;
+	}
+	
+	fstat(fd_input, &s_stat);
+	rval = sendfile(fd_output, fd_input, &n_bytes, s_stat.st_size);
+
+	close(fd_input);
+	close(fd_output);
+
+	return rval;
+}
+
 int main() {
 
     // File descriptor
@@ -20,7 +47,7 @@ int main() {
 
     mode_t mode = S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH;
     char buffer[80];
-    char msg[50];
+    char msg[100];
 
     /* Create a file */
 
@@ -37,7 +64,7 @@ int main() {
 
     if (fd != -1) {
 
-        printf("\n The file was successfully opened and given read and write access");
+        printf("\n The file was successfully opened and given read and write access.");
         
         /* Write something on the file */
 
@@ -50,7 +77,7 @@ int main() {
         /* Read the file */
         
         read(fd, buffer, sizeof(msg));
-        printf("\n %s was written to the file\n", buffer);
+        printf("%s was written to the file\n", buffer);
 
         /* Close the file */
         
@@ -58,7 +85,7 @@ int main() {
 
     } else {
 
-        printf("Error: File failed to open");
+        printf("\nError: File failed to open.");
 
     }
 
@@ -70,7 +97,7 @@ int main() {
     dir = opendir(dirname);
 
     if (dir == NULL) {
-        printf("Error: Unable to find directory");
+        printf("Error: Unable to find directory.");
     }
 
     /* Read a directory */
@@ -79,6 +106,20 @@ int main() {
         printf(">> %s\n", sd -> d_name);
 
     }
+
+    /* Copy file to a destination */
+
+    char inpath[100];
+    char destpath[100];
+
+    printf("\nEnter the path of the file you want to copy: ");
+    scanf("%s", destpath);
+
+    printf("\nEnter the path you want to copy your file to: ");
+    scanf("%s", destpath);
+
+    copy(inpath, destpath);
+
 
     /* Close directory */
 
