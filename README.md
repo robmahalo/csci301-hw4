@@ -1,5 +1,5 @@
 # csci301-hw4
-# Program that demonstrates read, write, open, exit commands and copying a source file to a different destination
+# Program that demonstrates read, write, open, exit commands and copying a source file to a different destination using POSIX API
 
 # How to use:
 
