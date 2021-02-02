@@ -7,7 +7,7 @@
 
 /* Copy source file to destination */
 
-int copy(char * source, char * dest)
+void copy(char * source, char * dest)
 {
 	int fd_input, fd_output, rval;
 	off_t n_bytes = 0;
@@ -23,13 +23,10 @@ int copy(char * source, char * dest)
 		return -1;
 	}
 	
-	fstat(fd_input, &s_stat);
-	rval = sendfile(fd_output, fd_input, &n_bytes, s_stat.st_size);
+	rval = write(fd_output, fd_input, sizeof(fd_input));
 
 	close(fd_input);
 	close(fd_output);
-
-	return rval;
 }
 
 int main() {
@@ -113,7 +110,7 @@ int main() {
     char destpath[100];
 
     printf("\nEnter the path of the file you want to copy: ");
-    scanf("%s", destpath);
+    scanf("%s", inpath);
 
     printf("\nEnter the path you want to copy your file to: ");
     scanf("%s", destpath);
